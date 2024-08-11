@@ -176,8 +176,9 @@ class StructClassify_RF:
         else:
             if not self.n_poi == 0:
                 Exception('The information of POI is not provided')
-            # Encode the features
-            X_test = self._encode_X(X_test)
+                
+        # Encode the features
+        X_test = self._encode_X(X_test)
 
         Y_test = self.clf.predict(X_test)
 
