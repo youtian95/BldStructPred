@@ -120,3 +120,24 @@ print(result)
 [2] Zhen Xu, Yuan Wu, Ming-zhu Qi, Ming Zheng, Chen Xiong, Xinzheng Lu. Prediction of Structural Type for City-Scale Seismic Damage Simulation Based on Machine Learning. Applied Sciences, 2020, 10(5): 1795.
 
 [3] FEMA. Hazus Inventory Technical Manual. Hazus 4.2 SP3. FEMA, 2021.
+
+
+## 引用本文
+---
+
+```bibtex
+@software{you_ke_liu_2025,
+  author       = {You, Tian and Ke, Ke and Liu, Jiajie},
+  title        = {youtian95/BldStructPred: v0.1.0},
+  month        = may,
+  year         = 2025,
+  publisher    = {Zenodo},
+  version      = {v0.1.0},
+  doi          = {10.5281/zenodo.15342789},
+  url          = {https://doi.org/10.5281/zenodo.15342789}
+}
+```
+
+或者
+
+You, T., Ke, K., & Liu, J. (2025). youtian95/BldStructPred: v0.1.0 (v0.1.0). Zenodo. https://doi.org/10.5281/zenodo.15342789
