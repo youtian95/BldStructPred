@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "BldStructPred"
+version = "0.1.0"
+authors = [
+    {name = "Tian You", email = "youtian@njtech.edu.cn"},
+]
+description = "A trained random forest model for predicting building structural type based on building footprint, height, area, and POI"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "scikit-learn",
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "geopandas",
+    "openpyxl",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/youtian95/BldStructPred"
+"Bug Tracker" = "https://github.com/youtian95/BldStructPred/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["BldStructPred"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "BldStructPred",
+    "LICENSE",
+    "README.md",
+    "Examples",
+    "data",
+    "figures",
+]

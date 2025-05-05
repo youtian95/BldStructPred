@@ -1,0 +1,122 @@
+# 建筑结构类型预测：根据面积、层数、轮廓、POI基本信息
+
+## 介绍
+---
+
+在各类地图中，建筑群的轮廓和高度等数据很常见，或者容易从高清卫星地图中获取，但是建筑的结构类型作为进行建筑结构性能分析的常用数据，却很难获得。虽然一些文献[1-2]中做了相关的预测模型研究，但是数据并未公开。
+
+本项目开发了一个基于随机森林算法的建筑结构类型预测模型，可根据建筑的平面面积、层数、建筑轮廓和周边兴趣点(POI)信息预测建筑的结构类型(混凝土框架、剪力墙、钢框架等)。
+
+从武汉的公开数据中手动提取了2121幢建筑的数据，大部分是国内城市常见类型：混凝土框架（C1）、混凝土剪力墙（C2，常为住宅）和轻钢结构（S3，常为工业厂房）。训练数据和训练好的模型都完全在本仓库中公开。
+
+## 安装
+---
+
+```bash
+# 创建名为bldstructpred的Python 3.12虚拟环境
+conda create -n bldstructpred python=3.12
+
+# 激活虚拟环境
+conda activate bldstructpred
+
+# 安装BldStructPred包
+pip install BldStructPred
+```
+
+## 随机森林模型
+---
+
+### 训练数据
+
+训练数据集：`data/武汉建筑训练数据_POI_LJJ.csv`
+
+数据来源：武汉市建筑数据，通过人工标注收集而成（[原始数据来源](https://data.wuhan.gov.cn/page/data/data_set_details.html?cataId=380658ec927a4be29e98638f1ff00572)）。
+
+POI分类数据：`data/高德POI分类与编码（中英文）_V1.06_20230208.xlsx`。
+
+### 输入
+
+ - 平面面积
+ - 层数
+ - 轮廓结点坐标
+ - POI（可选）：该建筑周围半径2公里范围内最近的20个属于'住宅服务'或者'商务住宅'的距离（根据高德地图POI获取功能可以得到）
+
+### 输出
+
+ - 结构类型：Hazus[3]中的结构分类，例如，C2为混凝土剪力墙结构，S3为轻型钢结构。
+
+### 模型性能
+
+根据面积、层数、轮廓、POI训练得到随机森林模型，整体的准确性为80%左右。混淆矩阵如下：
+
+![混淆矩阵](figures/ConfusionMatrix.png)
+
+各个特征的重要性如下。可以发现，除了面积和层数之外，POI信息也是很重要的。例如，如果住宅建筑分布在周围很近，那么说明这幢建筑也很有可能是住宅，而在国内住宅常常是混凝土剪力墙，所以POI信息对模型由很大的贡献。
+
+![特征重要性](figures/FeatureImportances.png)
+
+当不用POI数据时，整体准确性降低到73%。混淆矩阵如下：
+
+![混淆矩阵(无POI)](figures/ConfusionMatrix_noPOI.png)
+
+## 使用方法
+---
+
+### 模型训练
+
+可参考`Examples/Example1.py`中的代码进行模型训练：
+
+```python
+from BldStructPred.StructPred import StructPred_RF
+
+# 设置训练数据文件路径和参数
+DATA_FILE = 'data/武汉建筑训练数据_POI_LJJ.csv'
+N_VERT = 100  # 建筑轮廓顶点数量
+N_POI = 20    # 周边兴趣点数量
+
+# 创建并训练模型
+clf = StructPred_RF(DATA_FILE, N_POI, N_VERT)
+clf.train()
+
+# 评估模型性能
+clf.evaluate()
+
+# 可视化混淆矩阵和特征重要性
+clf.plot_confusion_matrix()
+clf.plot_feature_importance()
+```
+
+### 使用训练好的模型进行预测
+
+可参考`Examples/Example2.py`中的代码使用训练好的模型进行预测：
+
+```python
+from pickle import load
+from pathlib import Path
+
+# 加载训练好的模型
+with open('data/TrainedRF.pkl', "rb") as f:
+    clf = load(f)
+
+# 准备建筑物数据
+Area = [32000, 500]                           # 建筑面积列表
+Floor = [4, 10]                               # 建筑层数列表
+Footprint = [[(-80, -100), (80, -100), (80, 100), (-80, 100)],  # 建筑轮廓坐标列表
+             [(-12.5, -10), (12.5, -10), (12.5, 10), (-12.5, 10)]]
+             
+# POI数据：[[距离, 大类, 中类, 小类], ...]
+POI = [[[443.6, '商务住宅', '住宅区', '住宅小区']], 
+       [[294.7, '商务住宅', '住宅区', '住宅小区']]]
+
+# 预测建筑物结构类型
+result = clf.predict(Area, Floor, Footprint, POI)
+print(result)
+```
+
+## 参考文献
+---
+[1] Peng Zhou, Yuan Chang. Automated classification of building structures for urban built environment identification using machine learning. Journal of Building Engineering, 2021, 43: 103008.
+
+[2] Zhen Xu, Yuan Wu, Ming-zhu Qi, Ming Zheng, Chen Xiong, Xinzheng Lu. Prediction of Structural Type for City-Scale Seismic Damage Simulation Based on Machine Learning. Applied Sciences, 2020, 10(5): 1795.
+
+[3] FEMA. Hazus Inventory Technical Manual. Hazus 4.2 SP3. FEMA, 2021.
