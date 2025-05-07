@@ -9,7 +9,7 @@ from pathlib import Path
 from shapely.geometry import Point, Polygon
 import visvalingamwyatt as vw
 
-POI_ALL_CAT_FILE = (Path(__file__).parent / "../data/高德POI分类与编码（中英文）_V1.06_20230208.xlsx").resolve()
+POI_ALL_CAT_FILE = (Path(__file__).parent / "data/高德POI分类与编码（中英文）_V1.06_20230208.xlsx").resolve()
 POI_CAT = ['商务住宅', '住宿服务'] # The categories of POI to be used
 
 
@@ -53,7 +53,7 @@ def _prepare_data(DATA_FILE, N_POI, N_vert):
         EncCat: list, the label encoders for the categorical features
     '''
 
-    DATA_FILE = Path.cwd() / DATA_FILE
+    DATA_FILE = DATA_FILE
 
     # Load the training data
     train_data: gpd.GeoDataFrame = gpd.read_file(DATA_FILE, encoding='utf-8-sig', GEOM_POSSIBLE_NAMES="geometry", KEEP_GEOM_COLUMNS="NO")

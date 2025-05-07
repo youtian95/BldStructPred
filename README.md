@@ -66,27 +66,7 @@ Without POI data, the overall accuracy drops to 73%. The confusion matrix withou
 
 ### Model Training
 
-Refer to the code in `Examples/Example1.py` for model training:
-
-```python
-from BldStructPred.StructPred import StructPred_RF
-
-# Set training data file path and parameters
-DATA_FILE = 'data/武汉建筑训练数据_POI_LJJ.csv'
-N_VERT = 100  # Number of footprint vertices
-N_POI = 20    # Number of POIs
-
-# Create and train the model
-clf = StructPred_RF(DATA_FILE, N_POI, N_VERT)
-clf.train()
-
-# Evaluate model performance
-clf.evaluate()
-
-# Visualize confusion matrix and feature importance
-clf.plot_confusion_matrix()
-clf.plot_feature_importance()
-```
+Refer to the code in `Examples/Example1.py` for model training.
 
 ### Using the Trained Model for Prediction
 
@@ -95,9 +75,12 @@ Refer to the code in `Examples/Example2.py` for using the trained model for pred
 ```python
 from pickle import load
 from pathlib import Path
+import BldStructPred
+from BldStructPred.StructPred import StructPred_RF
 
 # Load the trained model
-with open('data/TrainedRF.pkl', "rb") as f:
+TRAINED_RF = Path(BldStructPred.__file__).parent / 'data/TrainedRF.pkl' 
+with open(TRAINED_RF, "rb") as f:
     clf = load(f)
 
 # Prepare building data

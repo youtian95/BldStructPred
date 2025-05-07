@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "BldStructPred"
-version = "0.1.0"
+version = "0.1.2"
 authors = [
     {name = "Tian You", email = "youtian@njtech.edu.cn"},
 ]
@@ -39,6 +39,5 @@ include = [
     "LICENSE",
     "README.md",
     "Examples",
-    "data",
     "figures",
 ]

@@ -64,27 +64,7 @@ POI分类数据：`data/高德POI分类与编码（中英文）_V1.06_20230208.x
 
 ### 模型训练
 
-可参考`Examples/Example1.py`中的代码进行模型训练：
-
-```python
-from BldStructPred.StructPred import StructPred_RF
-
-# 设置训练数据文件路径和参数
-DATA_FILE = 'data/武汉建筑训练数据_POI_LJJ.csv'
-N_VERT = 100  # 建筑轮廓顶点数量
-N_POI = 20    # 周边兴趣点数量
-
-# 创建并训练模型
-clf = StructPred_RF(DATA_FILE, N_POI, N_VERT)
-clf.train()
-
-# 评估模型性能
-clf.evaluate()
-
-# 可视化混淆矩阵和特征重要性
-clf.plot_confusion_matrix()
-clf.plot_feature_importance()
-```
+可参考`Examples/Example1.py`中的代码进行模型训练。
 
 ### 使用训练好的模型进行预测
 
@@ -93,9 +73,12 @@ clf.plot_feature_importance()
 ```python
 from pickle import load
 from pathlib import Path
+import BldStructPred
+from BldStructPred.StructPred import StructPred_RF
 
 # 加载训练好的模型
-with open('data/TrainedRF.pkl', "rb") as f:
+TRAINED_RF = Path(BldStructPred.__file__).parent / 'data/TrainedRF.pkl' 
+with open(TRAINED_RF, "rb") as f:
     clf = load(f)
 
 # 准备建筑物数据

@@ -4,10 +4,11 @@ from pickle import load
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
+import BldStructPred
 from BldStructPred.StructPred import StructPred_RF
 
 # 'data/TrainedRF_noPOI.pkl' / 'data/TrainedRF.pkl'
-TRAINED_RF = 'data/TrainedRF.pkl' 
+TRAINED_RF = Path(BldStructPred.__file__).parent / 'data/TrainedRF.pkl' 
 
 Area = [32000, 500]
 Floor = [4, 10]
