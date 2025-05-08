@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "BldStructPred"
-version = "0.1.2"
+version = "0.1.3"
 authors = [
     {name = "Tian You", email = "youtian@njtech.edu.cn"},
 ]
@@ -24,11 +24,13 @@ dependencies = [
     "matplotlib",
     "geopandas",
     "openpyxl",
+    "visvalingamwyatt",
 ]
 
 [project.urls]
 "Homepage" = "https://github.com/youtian95/BldStructPred"
 "Bug Tracker" = "https://github.com/youtian95/BldStructPred/issues"
+"Changelog" = "https://github.com/youtian95/BldStructPred/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["BldStructPred"]
@@ -40,4 +42,5 @@ include = [
     "README.md",
     "Examples",
     "figures",
+    "CHANGELOG.md",
 ]
