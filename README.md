@@ -73,15 +73,19 @@ Refer to the code in `Examples/Example1.py` for model training.
 Refer to the code in `Examples/Example2.py` for using the trained model for prediction:
 
 ```python
-from pickle import load
+from joblib import load
 from pathlib import Path
+import numpy as np
+from packaging import version
 import BldStructPred
-from BldStructPred.StructPred import StructPred_RF
 
 # Load the trained model
-TRAINED_RF = Path(BldStructPred.__file__).parent / 'data/TrainedRF.pkl' 
-with open(TRAINED_RF, "rb") as f:
-    clf = load(f)
+data_dir = Path(BldStructPred.__file__).parent / 'data'
+np_version_obj = version.parse(np.__version__)
+if np_version_obj < version.parse('1.27.0'):
+    TRAINED_RF = data_dir / 'TrainedRF_numpy_v_1_26.joblib'
+else:
+    TRAINED_RF = data_dir / 'TrainedRF.joblib'
 
 # Prepare building data
 Area = [32000, 500]                           # List of building areas
@@ -94,8 +98,9 @@ POI = [[[443.6, '商务住宅', '住宅区', '住宅小区']],
        [[294.7, '商务住宅', '住宅区', '住宅小区']]]
 
 # Predict building structure types
-result = clf.predict(Area, Floor, Footprint, POI)
-print(result)
+clf = load(TRAINED_RF)
+Y_test = clf.predict(Area, Floor, Footprint, POI)
+print(Y_test)
 ```
 
 ## References

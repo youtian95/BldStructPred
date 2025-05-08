@@ -5,6 +5,12 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.2.0] - 2025-05-08
+
+### 新增
+- pickle改成joblib
+- 针对不同numpy版本训练了两个模型
+
 ## [0.1.3] - 2025-05-08
 
 ### 修复

@@ -71,29 +71,33 @@ POI分类数据：`data/高德POI分类与编码（中英文）_V1.06_20230208.x
 可参考`Examples/Example2.py`中的代码使用训练好的模型进行预测：
 
 ```python
-from pickle import load
+from joblib import load
 from pathlib import Path
+import numpy as np
 import BldStructPred
-from BldStructPred.StructPred import StructPred_RF
 
-# 加载训练好的模型
-TRAINED_RF = Path(BldStructPred.__file__).parent / 'data/TrainedRF.pkl' 
-with open(TRAINED_RF, "rb") as f:
-    clf = load(f)
+# Load the trained model
+data_dir = Path(BldStructPred.__file__).parent / 'data'
+np_version_obj = version.parse(np.__version__)
+if np_version_obj < version.parse('1.27.0'):
+    TRAINED_RF = data_dir / 'TrainedRF_numpy_v_1_26.joblib'
+else:
+    TRAINED_RF = data_dir / 'TrainedRF.joblib'
 
-# 准备建筑物数据
-Area = [32000, 500]                           # 建筑面积列表
-Floor = [4, 10]                               # 建筑层数列表
-Footprint = [[(-80, -100), (80, -100), (80, 100), (-80, 100)],  # 建筑轮廓坐标列表
+# Prepare building data
+Area = [32000, 500]                           # List of building areas
+Floor = [4, 10]                               # List of floor numbers
+Footprint = [[(-80, -100), (80, -100), (80, 100), (-80, 100)],  # List of footprint coordinates
              [(-12.5, -10), (12.5, -10), (12.5, 10), (-12.5, 10)]]
              
-# POI数据：[[距离, 大类, 中类, 小类], ...]
+# POI data: [[Distance, Category1, Category2, Category3], ...]
 POI = [[[443.6, '商务住宅', '住宅区', '住宅小区']], 
        [[294.7, '商务住宅', '住宅区', '住宅小区']]]
 
-# 预测建筑物结构类型
-result = clf.predict(Area, Floor, Footprint, POI)
-print(result)
+# Predict building structure types
+clf = load(TRAINED_RF)
+Y_test = clf.predict(Area, Floor, Footprint, POI)
+print(Y_test)
 ```
 
 ## 参考文献
